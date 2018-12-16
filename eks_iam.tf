@@ -5,7 +5,7 @@
 */
 # Create IAM Role for the EKS Cluster
 resource "aws_iam_role" "kubes-cluster" {
-  name = "terraform-eks-kubes-cluster"
+  name = "${var.cluster_name}-cluster"
 
   assume_role_policy = <<POLICY
 {
@@ -21,6 +21,10 @@ resource "aws_iam_role" "kubes-cluster" {
   ]
 }
 POLICY
+
+  tags {
+    Name = "${var.cluster_name}"
+  }
 }
 
 ### Attach Policies to the above Role

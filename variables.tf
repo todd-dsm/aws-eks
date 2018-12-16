@@ -53,12 +53,14 @@ variable "officeIPAddr" {
 }
 
 variable "host_cidr" {
-  description = "CIDR block reserved for networking, from ENV; E.G.: export TF_VAR_host_cidr=10.0.16.0/20"
+  description = "CIDR block reserved for networking, from ENV; E.G.: export TF_VAR_host_cidr=10.1.0.0/20"
 }
 
-//variable "cluster_name" {
-//  description = "Display name in GKE and kubectl; from ENV; E.G.: TF_VAR_cluster_name=kubes-stage-la"
-//}
+variable "kubeType" {
+  description = "Kubernetes type; Managed (EKS; ~1.10) or Unmanaged (Typhoon; current version)"
+  type        = "string"
+}
+
 //
 //variable "kubeMaster_type" {
 //  description = "GKE master machine type; from ENV; E.G.: export TF_VAR_kubeMaster_type=n1-standard-1"

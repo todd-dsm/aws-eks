@@ -1,14 +1,16 @@
 /*
   -----------------------------------------------------------------------------
+                                  DISCOVERY
+  -----------------------------------------------------------------------------
+*/
+# Discover Zones
+data "aws_availability_zones" "available" {}
+
+/*
+  -----------------------------------------------------------------------------
                                   NETWORKING
   -----------------------------------------------------------------------------
 */
-
-# Discover Zones
-# This data source is included for ease of sample architecture deployment
-# and can be swapped out as necessary.
-data "aws_availability_zones" "available" {}
-
 # THE VPC
 resource "aws_vpc" "kubes" {
   cidr_block = "${var.host_cidr}"
@@ -21,6 +23,7 @@ resource "aws_vpc" "kubes" {
   }"
 }
 
+# Create Subnetes within the VPC
 resource "aws_subnet" "kubes" {
   count = 3
 
@@ -43,6 +46,7 @@ resource "aws_internet_gateway" "kubes" {
   }
 }
 
+# Create a Route
 resource "aws_route_table" "kubes" {
   vpc_id = "${aws_vpc.kubes.id}"
 
@@ -56,6 +60,7 @@ resource "aws_route_table" "kubes" {
   }
 }
 
+# Associate all subnets with the route
 resource "aws_route_table_association" "kubes" {
   count          = "${aws_subnet.kubes.count}"
   subnet_id      = "${aws_subnet.kubes.*.id[count.index]}"
