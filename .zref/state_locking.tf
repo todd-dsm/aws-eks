@@ -15,9 +15,9 @@ resource "aws_dynamodb_table" "tf-state-lock-table" {
     type = "S"
   }
 
-//  lifecycle {
-//    prevent_destroy = true
-//  }
+  //  lifecycle {
+  //    prevent_destroy = true
+  //  }
 
   tags {
     Name = "DynamoDB Terraform State Lock Table"

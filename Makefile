@@ -11,9 +11,8 @@ planFile		?= $(shell $(planFile))
 #	@setup/create-project-bucket.sh
 
 tf-init: ## Initialze the build
-	terraform init #-get=true -backend=true 
-	#-backend-config="backend.tf"
-
+	terraform init -get=true -backend=true \
+		-backend-config="backend.hcl"
 
 plan:   ## Initialze and Plan the build with output log
 	terraform plan -no-color \
@@ -27,6 +26,10 @@ apply:	## Build Terraform project with output log
 	terraform apply --auto-approve -no-color \
 		-input=false "$(planFile)" 2>&1 | \
 		tee /tmp/tf-$(TF_VAR_cluster_name)-apply.out
+	scripts/join-workers.sh
+
+creds:	## Update the local KUBECONFIG with the new cluster details
+	scripts/get-kubeconfig.sh
 
 remote:	## Switch to remote state storage
 	terraform init -get=true -backend=true \
@@ -40,6 +43,7 @@ clean:	## Destroy Terraformed resources and all generated files with output log
 		tee /tmp/tf-$(TF_VAR_cluster_name)-destroy.out
 	rm -f "$(planFile)"
 	rm -rf .terraform
+	rm -f  terraform.tfstate*
 	#aws s3 rm --recursive s3://$(TF_VAR_envBucket)
 	#aws s3 rb s3://$(TF_VAR_envBucket)
 #	kubectl config delete-context $(TF_VAR_cluster_name)
