@@ -18,7 +18,7 @@ resource "aws_security_group" "kubes-cluster" {
   }
 
   tags {
-    Name = "kubes-stage"
+    Name = "${var.cluster_name}"
   }
 }
 
@@ -54,7 +54,7 @@ resource "aws_security_group" "kubes-node" {
 
   tags = "${
     map(
-     "Name", "terraform-eks-kubes-node",
+     "Name", "${var.cluster_name}",
      "kubernetes.io/cluster/${var.cluster_name}", "owned",
     )
   }"
