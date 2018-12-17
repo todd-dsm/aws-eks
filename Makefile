@@ -26,10 +26,10 @@ apply:	## Build Terraform project with output log
 	terraform apply --auto-approve -no-color \
 		-input=false "$(planFile)" 2>&1 | \
 		tee /tmp/tf-$(TF_VAR_cluster_name)-apply.out
-	scripts/join-workers.sh
 
 creds:	## Update the local KUBECONFIG with the new cluster details
 	scripts/get-kubeconfig.sh
+	scripts/join-workers.sh
 
 remote:	## Switch to remote state storage
 	terraform init -get=true -backend=true \

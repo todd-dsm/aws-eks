@@ -22,7 +22,8 @@ resource "aws_iam_role" "kubes-worker" {
 POLICY
 }
 
-# Allows: Describe: Instances, RouteTables, SecurityGroups, Subnets, Volumes, VolumesModifications, VPCs and Clusters
+# Allows: Describe: Instances, RouteTables, SecurityGroups, Subnets, Volumes,
+# VolumesModifications, VPCs and Clusters
 resource "aws_iam_role_policy_attachment" "kubes-node-AmazonEKSWorkerNodePolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
   role       = "${aws_iam_role.kubes-worker.name}"
