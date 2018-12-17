@@ -5,8 +5,10 @@
               AWS manages the Controllers Customer manages workers
   -----------------------------------------------------------------------------
 */
+# Build the EKS Controllers; 1 in each AZ/Subnet for HA
 resource "aws_eks_cluster" "kubes" {
   name     = "${var.cluster_name}"
+  version  = "1.11"
   role_arn = "${aws_iam_role.kubes-cluster.arn}"
 
   vpc_config {

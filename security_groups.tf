@@ -6,7 +6,7 @@
 */
 ### EKS Cluster: allow all outbound traffic
 resource "aws_security_group" "kubes-cluster" {
-  name        = "terraform-eks-kubes-cluster"
+  name        = "${var.cluster_name}-cluster"
   description = "Cluster communication with worker nodes"
   vpc_id      = "${aws_vpc.kubes.id}"
 
@@ -41,7 +41,7 @@ resource "aws_security_group_rule" "kubes-cluster-ingress-workstation-https" {
 */
 # This security group controls networking access to the Kubernetes worker nodes.
 resource "aws_security_group" "kubes-node" {
-  name        = "terraform-eks-kubes-node"
+  name        = "${var.cluster_name}-node"
   description = "Security group for all nodes in the cluster"
   vpc_id      = "${aws_vpc.kubes.id}"
 
