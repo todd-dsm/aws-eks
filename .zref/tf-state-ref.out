@@ -1,0 +1,438 @@
+[0m[0m
+module.kubernetes.aws_autoscaling_group.kubes:
+  id = eks-kubes
+  arn = arn:aws:autoscaling:us-west-2:405322537961:autoScalingGroup:51c4e542-6cb5-4ef2-b277-45570cbe0d2a:autoScalingGroupName/eks-kubes
+  availability_zones.# = 3
+  availability_zones.2050015877 = us-west-2c
+  availability_zones.221770259 = us-west-2b
+  availability_zones.2487133097 = us-west-2a
+  default_cooldown = 300
+  desired_capacity = 3
+  enabled_metrics.# = 0
+  force_delete = false
+  health_check_grace_period = 300
+  health_check_type = EC2
+  launch_configuration = eks-kubes20181217020702683800000006
+  launch_template.# = 0
+  load_balancers.# = 0
+  max_size = 5
+  metrics_granularity = 1Minute
+  min_size = 3
+  mixed_instances_policy.# = 0
+  name = eks-kubes
+  placement_group = 
+  protect_from_scale_in = false
+  service_linked_role_arn = arn:aws:iam::405322537961:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling
+  suspended_processes.# = 0
+  tag.# = 2
+  tag.4249775861.key = kubernetes.io/cluster/kubes-stage-or
+  tag.4249775861.propagate_at_launch = true
+  tag.4249775861.value = owned
+  tag.797499242.key = Name
+  tag.797499242.propagate_at_launch = true
+  tag.797499242.value = kubes-stage-node
+  target_group_arns.# = 0
+  termination_policies.# = 0
+  vpc_zone_identifier.# = 3
+  vpc_zone_identifier.1988058301 = subnet-001b3c92a9a0b7ef1
+  vpc_zone_identifier.3142503365 = subnet-047ec7bdb27851341
+  vpc_zone_identifier.730533249 = subnet-068195e775e9254aa
+  wait_for_capacity_timeout = 10m
+module.kubernetes.aws_eks_cluster.kubes:
+  id = kubes-stage-or
+  arn = arn:aws:eks:us-west-2:405322537961:cluster/kubes-stage-or
+  certificate_authority.# = 1
+  certificate_authority.0.data = LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUN5RENDQWJDZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRFNE1USXhOekF5TURVeE5sb1hEVEk0TVRJeE5EQXlNRFV4Tmxvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTHpDCkkxcUE2TnhLY0lvdVRKcmx0ckVnU24wRnFNaTRGN2FxeDlmSTZWeUt0TDA1UnZIVDRCdjZ4bGZSRURiNnFXcWUKZlJpejVPVG1ZbEdGdnV6TkRvaE9OeTlhOU5ORGo5Z2p0aDAzb1ZlUzhyTnJNQnNMNGovQzBFM2F3M2c4LzRaNgpVOExVUWh3VWliY0tpK2tZZzdYS1JGeWtva3JRRnNKclJMSmxCNWxHOTEydVlXN3ZvUnMxc2dNaFE4cFpUNHpzCmhuaFcrNWxjZm9jYjZMWnZLaFp3cmVwVEhud01sR0hMK2h6TGw2VWdGVW8rUEl1UVRoaVNiOUE0QWQ2U3BtVG8KWm52dWlEVGgza21haFE3enFla1NBck1KclJDc0dqZlhHRjdnWVJmNXBCck51WWh0Z2RkeEFkMU1hWkxNSGs2UApIUldOQng5bWJCSnJRTW55SmhVQ0F3RUFBYU1qTUNFd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFEL2xVUlVPUmRqcHdhVVJmRnJ6ZUdBUlJwRkoKMnJzbzc0aTdOQzlOZXVuaVpWem14bDBxTnBjL1kxUUw2QlF3NjhQeE0rdTNBWjV5RG5Ob2h3UjJBbmhtS1VGeQpISkFMSmozY3JSd1lrMTFIMzJiV0N3SENxVGhZWGtweEtvempDOWorRy95OHZvSFJVZ3J5aGE3TTdlVFhFY05xCjZDU3JjVDdFdTNnclFkZ3dkVW4xUzBKYlZHZ0Nza3FWVkdSbmtOMnk4eFRyNnFoRHJoMGxZMURMQzVvbG1LaVgKRzFMcE9pMUhHZ0xHVTdpVk8zd3hTZ1IrV2o4K241RGxoR0N5UHZoNXlKUVJXN1lZT0JQNFoyVkMvVS8zMTVDSQpTVU5nSGxrL29TUStSaGUvb1VZN3JLQzI5ajBvNTBUMFl3Z29KaUp5VjdkcEJjU3Z2SkxrY0o2dDErMD0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+  created_at = 2018-12-17 01:58:51 +0000 UTC
+  endpoint = https://FD457D0EA8776FED6EABEBA6E32D1992.yl4.us-west-2.eks.amazonaws.com
+  name = kubes-stage-or
+  platform_version = eks.1
+  role_arn = arn:aws:iam::405322537961:role/kubes-stage-or-cluster
+  version = 1.11
+  vpc_config.# = 1
+  vpc_config.0.security_group_ids.# = 1
+  vpc_config.0.security_group_ids.2502031759 = sg-030cf40a102e60d2f
+  vpc_config.0.subnet_ids.# = 3
+  vpc_config.0.subnet_ids.2294054493 = subnet-047ec7bdb27851341
+  vpc_config.0.subnet_ids.3601839812 = subnet-001b3c92a9a0b7ef1
+  vpc_config.0.subnet_ids.4187831826 = subnet-068195e775e9254aa
+  vpc_config.0.vpc_id = vpc-07ae7916c2455322b
+module.kubernetes.aws_iam_instance_profile.kubes-node:
+  id = kubes-stage-node-profile
+  arn = arn:aws:iam::405322537961:instance-profile/kubes-stage-node-profile
+  create_date = 2018-12-17T01:58:40Z
+  name = kubes-stage-node-profile
+  path = /
+  role = kubes-stage-node
+  roles.# = 1
+  roles.4252698204 = kubes-stage-node
+  unique_id = AIPAJMZOB63YTCGGBFMAI
+module.kubernetes.aws_iam_role.kubes-cluster:
+  id = kubes-stage-or-cluster
+  arn = arn:aws:iam::405322537961:role/kubes-stage-or-cluster
+  assume_role_policy = {"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"Service":"eks.amazonaws.com"},"Action":"sts:AssumeRole"}]}
+  create_date = 2018-12-17T01:58:39Z
+  description = 
+  force_detach_policies = false
+  max_session_duration = 3600
+  name = kubes-stage-or-cluster
+  path = /
+  tags.% = 1
+  tags.Name = kubes-stage-or
+  unique_id = AROAJ6IJQKEQJXWKZCUI4
+module.kubernetes.aws_iam_role.kubes-worker:
+  id = kubes-stage-node
+  arn = arn:aws:iam::405322537961:role/kubes-stage-node
+  assume_role_policy = {"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"Service":"ec2.amazonaws.com"},"Action":"sts:AssumeRole"}]}
+  create_date = 2018-12-17T01:58:39Z
+  description = 
+  force_detach_policies = false
+  max_session_duration = 3600
+  name = kubes-stage-node
+  path = /
+  tags.% = 0
+  unique_id = AROAJUYRSUPZX4ZHCQYPM
+module.kubernetes.aws_iam_role_policy_attachment.kubes-cluster-AmazonEKSClusterPolicy:
+  id = kubes-stage-or-cluster-20181217015840208100000003
+  policy_arn = arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+  role = kubes-stage-or-cluster
+module.kubernetes.aws_iam_role_policy_attachment.kubes-cluster-AmazonEKSServicePolicy:
+  id = kubes-stage-or-cluster-20181217015840199600000001
+  policy_arn = arn:aws:iam::aws:policy/AmazonEKSServicePolicy
+  role = kubes-stage-or-cluster
+module.kubernetes.aws_iam_role_policy_attachment.kubes-node-AmazonEC2ContainerRegistryReadOnly:
+  id = kubes-stage-node-20181217015840199800000002
+  policy_arn = arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+  role = kubes-stage-node
+module.kubernetes.aws_iam_role_policy_attachment.kubes-node-AmazonEKSWorkerNodePolicy:
+  id = kubes-stage-node-20181217015840212400000004
+  policy_arn = arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+  role = kubes-stage-node
+module.kubernetes.aws_iam_role_policy_attachment.kubes-node-AmazonEKS_CNI_Policy:
+  id = kubes-stage-node-20181217015840337800000005
+  policy_arn = arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+  role = kubes-stage-node
+module.kubernetes.aws_internet_gateway.kubes:
+  id = igw-0a29087a70a5b2800
+  owner_id = 405322537961
+  tags.% = 1
+  tags.Name = kubes-stage-or
+  vpc_id = vpc-07ae7916c2455322b
+module.kubernetes.aws_launch_configuration.kubes:
+  id = eks-kubes20181217020702683800000006
+  associate_public_ip_address = true
+  ebs_block_device.# = 0
+  ebs_optimized = false
+  enable_monitoring = true
+  ephemeral_block_device.# = 0
+  iam_instance_profile = kubes-stage-node-profile
+  image_id = ami-0f54a2f7d2e9c88b3
+  instance_type = m4.large
+  key_name = 
+  name = eks-kubes20181217020702683800000006
+  name_prefix = eks-kubes
+  root_block_device.# = 0
+  security_groups.# = 1
+  security_groups.2219978638 = sg-0ece0de80508927e9
+  spot_price = 
+  user_data_base64 = IyEvYmluL2Jhc2gKc2V0IC1vIHh0cmFjZQovZXRjL2Vrcy9ib290c3RyYXAuc2ggLS1hcGlzZXJ2ZXItZW5kcG9pbnQgJ2h0dHBzOi8vRkQ0NTdEMEVBODc3NkZFRDZFQUJFQkE2RTMyRDE5OTIueWw0LnVzLXdlc3QtMi5la3MuYW1hem9uYXdzLmNvbScgLS1iNjQtY2x1c3Rlci1jYSAnTFMwdExTMUNSVWRKVGlCRFJWSlVTVVpKUTBGVVJTMHRMUzB0Q2sxSlNVTjVSRU5EUVdKRFowRjNTVUpCWjBsQ1FVUkJUa0puYTNGb2EybEhPWGN3UWtGUmMwWkJSRUZXVFZKTmQwVlJXVVJXVVZGRVJYZHdjbVJYU213S1kyMDFiR1JIVm5wTlFqUllSRlJGTkUxVVNYaE9la0Y1VFVSVmVFNXNiMWhFVkVrMFRWUkplRTVFUVhsTlJGVjRUbXh2ZDBaVVJWUk5Ra1ZIUVRGVlJRcEJlRTFMWVROV2FWcFlTblZhV0ZKc1kzcERRMEZUU1hkRVVWbEtTMjlhU1doMlkwNUJVVVZDUWxGQlJHZG5SVkJCUkVORFFWRnZRMmRuUlVKQlRIcERDa2t4Y1VFMlRuaExZMGx2ZFZSS2NteDBja1ZuVTI0d1JuRk5hVFJHTjJGeGVEbG1TVFpXZVV0MFREQTFVblpJVkRSQ2RqWjRiR1pTUlVSaU5uRlhjV1VLWmxKcGVqVlBWRzFaYkVkR2RuVjZUa1J2YUU5T2VUbGhPVTVPUkdvNVoycDBhREF6YjFabFV6aHlUbkpOUW5OTU5Hb3ZRekJGTTJGM00yYzRMelJhTmdwVk9FeFZVV2gzVldsaVkwdHBLMnRaWnpkWVMxSkdlV3R2YTNKUlJuTktjbEpNU214Q05XeEhPVEV5ZFZsWE4zWnZVbk14YzJkTmFGRTRjRnBVTkhwekNtaHVhRmNyTld4alptOWpZalpNV25aTGFGcDNjbVZ3VkVodWQwMXNSMGhNSzJoNlRHdzJWV2RHVlc4clVFbDFVVlJvYVZOaU9VRTBRV1EyVTNCdFZHOEtXbTUyZFdsRVZHZ3phMjFoYUZFM2VuRmxhMU5CY2sxS2NsSkRjMGRxWmxoSFJqZG5XVkptTlhCQ2NrNTFXV2gwWjJSa2VFRmtNVTFoV2t4TlNHczJVQXBJVWxkT1FuZzViV0pDU25KUlRXNTVTbWhWUTBGM1JVRkJZVTFxVFVORmQwUm5XVVJXVWpCUVFWRklMMEpCVVVSQlowdHJUVUU0UjBFeFZXUkZkMFZDQ2k5M1VVWk5RVTFDUVdZNGQwUlJXVXBMYjFwSmFIWmpUa0ZSUlV4Q1VVRkVaMmRGUWtGRUwyeFZVbFZQVW1ScWNIZGhWVkptUm5KNlpVZEJVbEp3UmtvS01uSnpiemMwYVRkT1F6bE9aWFZ1YVZwV2VtMTRiREJ4VG5Cakwxa3hVVXcyUWxGM05qaFFlRTByZFROQldqVjVSRzVPYjJoM1VqSkJibWh0UzFWR2VRcElTa0ZNU21velkzSlNkMWxyTVRGSU16SmlWME4zU0VOeFZHaFpXR3R3ZUV0dmVtcERPV29yUnk5NU9IWnZTRkpWWjNKNWFHRTNUVGRsVkZoRlkwNXhDalpEVTNKalZEZEZkVE5uY2xGa1ozZGtWVzR4VXpCS1lsWkhaME56YTNGV1ZrZFNibXRPTW5rNGVGUnlObkZvUkhKb01HeFpNVVJNUXpWdmJHMUxhVmdLUnpGTWNFOXBNVWhIWjB4SFZUZHBWazh6ZDNoVFoxSXJWMm80SzI0MVJHeG9SME41VUhab05YbEtVVkpYTjFsWlQwSlFORm95VmtNdlZTOHpNVFZEU1FwVFZVNW5TR3hyTDI5VFVTdFNhR1V2YjFWWk4zSkxRekk1YWpCdk5UQlVNRmwzWjI5S2FVcDVWamRrY0VKalUzWjJTa3hyWTBvMmRERXJNRDBLTFMwdExTMUZUa1FnUTBWU1ZFbEdTVU5CVkVVdExTMHRMUW89JyAna3ViZXMtc3RhZ2Utb3InCg==
+  vpc_classic_link_id = 
+  vpc_classic_link_security_groups.# = 0
+module.kubernetes.aws_route_table.kubes:
+  id = rtb-0be8fbff173a8c366
+  owner_id = 405322537961
+  propagating_vgws.# = 0
+  route.# = 1
+  route.3607823513.cidr_block = 0.0.0.0/0
+  route.3607823513.egress_only_gateway_id = 
+  route.3607823513.gateway_id = igw-0a29087a70a5b2800
+  route.3607823513.instance_id = 
+  route.3607823513.ipv6_cidr_block = 
+  route.3607823513.nat_gateway_id = 
+  route.3607823513.network_interface_id = 
+  route.3607823513.transit_gateway_id = 
+  route.3607823513.vpc_peering_connection_id = 
+  tags.% = 1
+  tags.Name = kubes-stage-or
+  vpc_id = vpc-07ae7916c2455322b
+module.kubernetes.aws_route_table_association.kubes.0:
+  id = rtbassoc-0577edd21d2a04681
+  route_table_id = rtb-0be8fbff173a8c366
+  subnet_id = subnet-001b3c92a9a0b7ef1
+module.kubernetes.aws_route_table_association.kubes.1:
+  id = rtbassoc-0d188c8f7bc2cfcd7
+  route_table_id = rtb-0be8fbff173a8c366
+  subnet_id = subnet-047ec7bdb27851341
+module.kubernetes.aws_route_table_association.kubes.2:
+  id = rtbassoc-0bf00eadfb845d76c
+  route_table_id = rtb-0be8fbff173a8c366
+  subnet_id = subnet-068195e775e9254aa
+module.kubernetes.aws_security_group.kubes-cluster:
+  id = sg-030cf40a102e60d2f
+  arn = arn:aws:ec2:us-west-2:405322537961:security-group/sg-030cf40a102e60d2f
+  description = Cluster communication with worker nodes
+  egress.# = 1
+  egress.482069346.cidr_blocks.# = 1
+  egress.482069346.cidr_blocks.0 = 0.0.0.0/0
+  egress.482069346.description = 
+  egress.482069346.from_port = 0
+  egress.482069346.ipv6_cidr_blocks.# = 0
+  egress.482069346.prefix_list_ids.# = 0
+  egress.482069346.protocol = -1
+  egress.482069346.security_groups.# = 0
+  egress.482069346.self = false
+  egress.482069346.to_port = 0
+  ingress.# = 2
+  ingress.2405358704.cidr_blocks.# = 1
+  ingress.2405358704.cidr_blocks.0 = 10.0.0.0/16
+  ingress.2405358704.description = Allow workstation to communicate with the cluster API Server
+  ingress.2405358704.from_port = 443
+  ingress.2405358704.ipv6_cidr_blocks.# = 0
+  ingress.2405358704.prefix_list_ids.# = 0
+  ingress.2405358704.protocol = tcp
+  ingress.2405358704.security_groups.# = 0
+  ingress.2405358704.self = false
+  ingress.2405358704.to_port = 443
+  ingress.2615257827.cidr_blocks.# = 0
+  ingress.2615257827.description = Allow pods to communicate with the cluster API Server
+  ingress.2615257827.from_port = 443
+  ingress.2615257827.ipv6_cidr_blocks.# = 0
+  ingress.2615257827.prefix_list_ids.# = 0
+  ingress.2615257827.protocol = tcp
+  ingress.2615257827.security_groups.# = 1
+  ingress.2615257827.security_groups.2219978638 = sg-0ece0de80508927e9
+  ingress.2615257827.self = false
+  ingress.2615257827.to_port = 443
+  name = kubes-stage-or-cluster
+  owner_id = 405322537961
+  revoke_rules_on_delete = false
+  tags.% = 1
+  tags.Name = kubes-stage-or
+  vpc_id = vpc-07ae7916c2455322b
+module.kubernetes.aws_security_group.kubes-node:
+  id = sg-0ece0de80508927e9
+  arn = arn:aws:ec2:us-west-2:405322537961:security-group/sg-0ece0de80508927e9
+  description = Security group for all nodes in the cluster
+  egress.# = 1
+  egress.482069346.cidr_blocks.# = 1
+  egress.482069346.cidr_blocks.0 = 0.0.0.0/0
+  egress.482069346.description = 
+  egress.482069346.from_port = 0
+  egress.482069346.ipv6_cidr_blocks.# = 0
+  egress.482069346.prefix_list_ids.# = 0
+  egress.482069346.protocol = -1
+  egress.482069346.security_groups.# = 0
+  egress.482069346.self = false
+  egress.482069346.to_port = 0
+  ingress.# = 2
+  ingress.1579485641.cidr_blocks.# = 0
+  ingress.1579485641.description = Allow worker Kubelets and pods to receive communication from the cluster control plane
+  ingress.1579485641.from_port = 1025
+  ingress.1579485641.ipv6_cidr_blocks.# = 0
+  ingress.1579485641.prefix_list_ids.# = 0
+  ingress.1579485641.protocol = tcp
+  ingress.1579485641.security_groups.# = 1
+  ingress.1579485641.security_groups.2446949845 = sg-030cf40a102e60d2f
+  ingress.1579485641.self = false
+  ingress.1579485641.to_port = 65535
+  ingress.2278689831.cidr_blocks.# = 0
+  ingress.2278689831.description = Allow node to communicate with each other
+  ingress.2278689831.from_port = 0
+  ingress.2278689831.ipv6_cidr_blocks.# = 0
+  ingress.2278689831.prefix_list_ids.# = 0
+  ingress.2278689831.protocol = -1
+  ingress.2278689831.security_groups.# = 0
+  ingress.2278689831.self = true
+  ingress.2278689831.to_port = 0
+  name = kubes-stage-or-node
+  owner_id = 405322537961
+  revoke_rules_on_delete = false
+  tags.% = 2
+  tags.Name = kubes-stage-or
+  tags.kubernetes.io/cluster/kubes-stage-or = owned
+  vpc_id = vpc-07ae7916c2455322b
+module.kubernetes.aws_security_group_rule.kubes-cluster-ingress-node-https:
+  id = sgrule-448535988
+  cidr_blocks.# = 0
+  description = Allow pods to communicate with the cluster API Server
+  from_port = 443
+  ipv6_cidr_blocks.# = 0
+  prefix_list_ids.# = 0
+  protocol = tcp
+  security_group_id = sg-030cf40a102e60d2f
+  self = false
+  source_security_group_id = sg-0ece0de80508927e9
+  to_port = 443
+  type = ingress
+module.kubernetes.aws_security_group_rule.kubes-cluster-ingress-workstation-https:
+  id = sgrule-3062543660
+  cidr_blocks.# = 1
+  cidr_blocks.0 = 10.0.0.0/16
+  description = Allow workstation to communicate with the cluster API Server
+  from_port = 443
+  ipv6_cidr_blocks.# = 0
+  prefix_list_ids.# = 0
+  protocol = tcp
+  security_group_id = sg-030cf40a102e60d2f
+  self = false
+  to_port = 443
+  type = ingress
+module.kubernetes.aws_security_group_rule.kubes-node-ingress-cluster:
+  id = sgrule-713757600
+  cidr_blocks.# = 0
+  description = Allow worker Kubelets and pods to receive communication from the cluster control plane
+  from_port = 1025
+  ipv6_cidr_blocks.# = 0
+  prefix_list_ids.# = 0
+  protocol = tcp
+  security_group_id = sg-0ece0de80508927e9
+  self = false
+  source_security_group_id = sg-030cf40a102e60d2f
+  to_port = 65535
+  type = ingress
+module.kubernetes.aws_security_group_rule.kubes-node-ingress-self:
+  id = sgrule-3199730799
+  cidr_blocks.# = 0
+  description = Allow node to communicate with each other
+  from_port = 0
+  ipv6_cidr_blocks.# = 0
+  prefix_list_ids.# = 0
+  protocol = -1
+  security_group_id = sg-0ece0de80508927e9
+  self = false
+  source_security_group_id = sg-0ece0de80508927e9
+  to_port = 0
+  type = ingress
+module.kubernetes.aws_subnet.kubes.0:
+  id = subnet-001b3c92a9a0b7ef1
+  arn = arn:aws:ec2:us-west-2:405322537961:subnet/subnet-001b3c92a9a0b7ef1
+  assign_ipv6_address_on_creation = false
+  availability_zone = us-west-2a
+  availability_zone_id = usw2-az1
+  cidr_block = 10.0.0.0/24
+  ipv6_cidr_block = 
+  ipv6_cidr_block_association_id = 
+  map_public_ip_on_launch = false
+  owner_id = 405322537961
+  tags.% = 2
+  tags.Name = kubes-stage-or
+  tags.kubernetes.io/cluster/kubes-stage-or = shared
+  vpc_id = vpc-07ae7916c2455322b
+module.kubernetes.aws_subnet.kubes.1:
+  id = subnet-047ec7bdb27851341
+  arn = arn:aws:ec2:us-west-2:405322537961:subnet/subnet-047ec7bdb27851341
+  assign_ipv6_address_on_creation = false
+  availability_zone = us-west-2b
+  availability_zone_id = usw2-az2
+  cidr_block = 10.0.1.0/24
+  ipv6_cidr_block = 
+  ipv6_cidr_block_association_id = 
+  map_public_ip_on_launch = false
+  owner_id = 405322537961
+  tags.% = 2
+  tags.Name = kubes-stage-or
+  tags.kubernetes.io/cluster/kubes-stage-or = shared
+  vpc_id = vpc-07ae7916c2455322b
+module.kubernetes.aws_subnet.kubes.2:
+  id = subnet-068195e775e9254aa
+  arn = arn:aws:ec2:us-west-2:405322537961:subnet/subnet-068195e775e9254aa
+  assign_ipv6_address_on_creation = false
+  availability_zone = us-west-2c
+  availability_zone_id = usw2-az3
+  cidr_block = 10.0.2.0/24
+  ipv6_cidr_block = 
+  ipv6_cidr_block_association_id = 
+  map_public_ip_on_launch = false
+  owner_id = 405322537961
+  tags.% = 2
+  tags.Name = kubes-stage-or
+  tags.kubernetes.io/cluster/kubes-stage-or = shared
+  vpc_id = vpc-07ae7916c2455322b
+module.kubernetes.aws_vpc.kubes:
+  id = vpc-07ae7916c2455322b
+  arn = arn:aws:ec2:us-west-2:405322537961:vpc/vpc-07ae7916c2455322b
+  assign_generated_ipv6_cidr_block = false
+  cidr_block = 10.0.0.0/16
+  default_network_acl_id = acl-01f03f98b3653a179
+  default_route_table_id = rtb-0f9701c9ef51e9f07
+  default_security_group_id = sg-03878aeddcf1a8829
+  dhcp_options_id = dopt-13f3ec71
+  enable_classiclink = false
+  enable_classiclink_dns_support = false
+  enable_dns_hostnames = false
+  enable_dns_support = true
+  instance_tenancy = default
+  ipv6_association_id = 
+  ipv6_cidr_block = 
+  main_route_table_id = rtb-0f9701c9ef51e9f07
+  owner_id = 405322537961
+  tags.% = 2
+  tags.Name = kubes-stage-or
+  tags.kubernetes.io/cluster/kubes-stage-or = shared
+module.kubernetes.data.aws_ami.eks-worker:
+  id = ami-0f54a2f7d2e9c88b3
+  architecture = x86_64
+  block_device_mappings.# = 1
+  block_device_mappings.3798922657.device_name = /dev/xvda
+  block_device_mappings.3798922657.ebs.% = 6
+  block_device_mappings.3798922657.ebs.delete_on_termination = true
+  block_device_mappings.3798922657.ebs.encrypted = false
+  block_device_mappings.3798922657.ebs.iops = 0
+  block_device_mappings.3798922657.ebs.snapshot_id = snap-0b0fcd300478c9b2c
+  block_device_mappings.3798922657.ebs.volume_size = 20
+  block_device_mappings.3798922657.ebs.volume_type = gp2
+  block_device_mappings.3798922657.no_device = 
+  block_device_mappings.3798922657.virtual_name = 
+  creation_date = 2018-10-23T20:47:02.000Z
+  description = EKS Kubernetes Worker AMI with AmazonLinux2 image
+  filter.# = 1
+  filter.249857641.name = name
+  filter.249857641.values.# = 1
+  filter.249857641.values.0 = amazon-eks-node-v*
+  hypervisor = xen
+  image_id = ami-0f54a2f7d2e9c88b3
+  image_location = 602401143452/amazon-eks-node-v25
+  image_type = machine
+  most_recent = true
+  name = amazon-eks-node-v25
+  owner_id = 602401143452
+  owners.# = 1
+  owners.0 = 602401143452
+  product_codes.# = 0
+  public = true
+  root_device_name = /dev/xvda
+  root_device_type = ebs
+  root_snapshot_id = snap-0b0fcd300478c9b2c
+  sriov_net_support = simple
+  state = available
+  state_reason.% = 2
+  state_reason.code = UNSET
+  state_reason.message = UNSET
+  tags.% = 0
+  virtualization_type = hvm
+module.kubernetes.data.aws_availability_zones.available:
+  id = 2018-12-17 02:30:10.694919 +0000 UTC
+  names.# = 3
+  names.0 = us-west-2a
+  names.1 = us-west-2b
+  names.2 = us-west-2c
+  zone_ids.# = 3
+  zone_ids.0 = usw2-az1
+  zone_ids.1 = usw2-az2
+  zone_ids.2 = usw2-az3
+[0m
+
+Outputs:
+
+worker-configmap = apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aws-auth
+  namespace: kube-system
+data:
+  mapRoles: |
+    - rolearn: arn:aws:iam::405322537961:role/kubes-stage-node
+      username: system:node:{{EC2PrivateDNSName}}
+      groups:
+        - system:bootstrappers
+        - system:nodes[0m

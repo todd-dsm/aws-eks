@@ -26,19 +26,6 @@ variable "region" {
 
 /*
   -----------------------------------------------------------------------------
-                                 STATE SECURITY
-  -----------------------------------------------------------------------------
-*/
-variable "kms_name" {
-  default = "alias/aws/s3"
-}
-
-variable "kms_key" {
-  default = "8828d123-a3cf-42de-ab8a-628cf9d839d3"
-}
-
-/*
-  -----------------------------------------------------------------------------
                                    KUBERNETES
   -----------------------------------------------------------------------------
 */
@@ -54,7 +41,7 @@ variable "cluster_name" {
 }
 
 variable "officeIPAddr" {
-  description = "Is the IP address of the Current (outbound) Gateway: A.B.C.D/32"
+  description = "The IP address of the Current (outbound) Gateway: A.B.C.D/32"
 }
 
 variable "host_cidr" {
@@ -74,14 +61,3 @@ variable "kubeNode_type" {
 variable "kubeNode_count" {
   description = "Initial number of master nodes, from ENV; E.G.: export TF_VAR_kubeNode_count=3"
 }
-
-//variable "kubes_log_service" {
-//  type    = "string"
-//  default = "logging.googleapis.com/kubernetes"
-//}
-//
-//variable "kubes_monitor_service" {
-//  type    = "string"
-//  default = "monitoring.googleapis.com/kubernetes"
-//}
-
