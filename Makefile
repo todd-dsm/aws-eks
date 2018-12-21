@@ -26,6 +26,7 @@ apply:	## Build Terraform project with output log
 	terraform apply --auto-approve -no-color \
 		-input=false "$(planFile)" 2>&1 | \
 		tee /tmp/tf-$(TF_VAR_cluster_name)-apply.out
+	cp -vp ./terraform.tfstate /tmp/
 
 creds:	## Update the local KUBECONFIG with the new cluster details
 	scripts/get-kubeconfig.sh
@@ -41,6 +42,8 @@ remote:	## Switch to remote state storage
 clean:	## Destroy Terraformed resources and all generated files with output log
 	terraform destroy --force -auto-approve -no-color 2>&1 | \
 		tee /tmp/tf-$(TF_VAR_cluster_name)-destroy.out
+	kubectl config use-context minikube
+	kubectl config delete-context $(TF_VAR_cluster_name)
 	rm -f "$(planFile)"
 	rm -rf .terraform
 	rm -f  terraform.tfstate*
