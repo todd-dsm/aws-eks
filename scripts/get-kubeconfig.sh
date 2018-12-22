@@ -64,6 +64,8 @@ if ! type -P "${sysAuthBin##*/}"; then
         mv "$tmpAuthBin" "$sysAuthBin"
         chmod u+x "$sysAuthBin"
     fi
+else
+    pMsg "There is an authenticator; moving on."
 fi
 
 
@@ -82,13 +84,24 @@ fi
 ### Update the local KUBECONFIG with the new, remote cluster details
 ### REF: https://docs.aws.amazon.com/eks/latest/userguide/create-kubeconfig.html
 ###---
-pMsg """
 
-    Updating local KUBECONFIG...
+targetClusterName="$(grep "name: $TF_VAR_cluster_name" ~/.kube/config)"
 
-    """
-aws eks update-kubeconfig --name "$TF_VAR_cluster_name"
+if [[ "${targetClusterName##* }" != "$TF_VAR_cluster_name" ]]; then
+    pMsg """
 
+        Updating local KUBECONFIG...
+
+        """
+    aws eks update-kubeconfig --name "$TF_VAR_cluster_name"
+else
+    pMsg """
+
+        It looks like $TF_VAR_cluster_name is configured; I'm out.
+
+        """
+        exit 0
+fi
 
 ###---
 ### Change the Cluster Name locally
