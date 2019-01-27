@@ -90,7 +90,8 @@ resource "aws_launch_configuration" "kubes" {
   associate_public_ip_address = true
   iam_instance_profile        = "${aws_iam_instance_profile.kubes-node.name}"
   image_id                    = "${data.aws_ami.eks-worker.id}"
-  instance_type               = "m4.large"
+  instance_type               = "${var.kubeNode_type}"
+  key_name                    = "master.pem"
   name_prefix                 = "eks-kubes"
   security_groups             = ["${aws_security_group.kubes-node.id}"]
   user_data_base64            = "${base64encode(local.kubes-node-userdata)}"
