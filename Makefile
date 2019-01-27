@@ -30,7 +30,10 @@ apply:	## Build Terraform project with output log
 
 creds:	## Update the local KUBECONFIG with the new cluster details
 	scripts/get-kubeconfig.sh
+	sleep 7
 	scripts/join-workers.sh
+	sleep 5
+	scripts/config-helm.sh
 
 remote:	## Switch to remote state storage
 	terraform init -get=true -backend=true \
