@@ -18,13 +18,17 @@
 # -----------------------------------------------------------------------------
 #set -x
 
-
 ###----------------------------------------------------------------------------
 ### VARIABLES
 ###----------------------------------------------------------------------------
+# ENV Stuff
 : "${TF_VAR_cluster_name?  Wheres cluster_name, bro!}"
 : "${TF_VAR_aws_acct_no?   Missing the account number!}"
-eksCluster="arn:aws:eks:us-east-1:648053780176:cluster/${TF_VAR_cluster_name}"
+
+myRegion="$TF_VAR_region"
+myAcctNo="$TF_VAR_aws_acct_no"
+myCluster="cluster/${TF_VAR_cluster_name}"
+eksCluster="arn:aws:eks:${myRegion}:${myAcctNo}:${myCluster}"
 targetClusterName="$(grep "name: $TF_VAR_cluster_name" ~/.kube/config)"
 
 ###----------------------------------------------------------------------------
@@ -44,12 +48,10 @@ function pHeadline() {
     """
 }
 
-# rename cloud-defaults, they're obnoxious
+# rename cloud-defaults, they're way too long
 function renameCreds() {
     pMsg "Changing that obnoxious name..."
-    kubectl config rename-context \
-        "arn:aws:eks:${TF_VAR_region}:648053780176:cluster/${TF_VAR_cluster_name}" \
-        "$TF_VAR_cluster_name"
+    kubectl config rename-context "$eksCluster" "$TF_VAR_cluster_name"
 }
 
 # no creds locally, get them
@@ -65,12 +67,6 @@ function pullNewCreds() {
 ###----------------------------------------------------------------------------
 ### MAIN PROGRAM
 ###----------------------------------------------------------------------------
-### Pre-check: verify caller
-###---
-#aws sts get-caller-identity
-
-
-###---
 ### Update the local KUBECONFIG with the new, remote cluster details
 ### REF: https://docs.aws.amazon.com/eks/latest/userguide/create-kubeconfig.html
 ###---
