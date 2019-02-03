@@ -4,6 +4,7 @@
   -----------------------------------------------------------------------------
 */
 # Create IAM Role for the EKS Cluster
+# REF: https://docs.aws.amazon.com/eks/latest/userguide/service_IAM_role.html
 resource "aws_iam_role" "kubes-cluster" {
   name = "${var.cluster_name}-cluster"
 

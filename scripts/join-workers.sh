@@ -8,5 +8,3 @@ terraform output worker-configmap > "$workerConfig"
 
 # join workers
 kubectl apply -f "$workerConfig"
-kubectl get nodes
-

@@ -24,18 +24,19 @@ variable "region" {
   type        = "string"
 }
 
-/*
-  -----------------------------------------------------------------------------
-                                 STATE SECURITY
-  -----------------------------------------------------------------------------
-*/
-variable "kms_name" {
-  default = "alias/aws/s3"
-}
-
-variable "kms_key" {
-  default = "8828d123-a3cf-42de-ab8a-628cf9d839d3"
-}
+///*
+//  -----------------------------------------------------------------------------
+//                                 STATE SECURITY
+//  -----------------------------------------------------------------------------
+//*/
+//variable "kms_name" {
+//  default = "alias/aws/s3"
+//}
+//
+//variable "kms_key" {
+//  description = "AWS-provided s3 encryption key, for now."
+//  default = "xoxoxoxo-xoxo-xoxo-xoxo-xoxoxoxoxoxo"
+//}
 
 /*
   -----------------------------------------------------------------------------
@@ -53,8 +54,13 @@ variable "cluster_name" {
   type        = "string"
 }
 
+variable "builder" {
+  description = "Evaluates to $USER; there must be key-piar (with the same name) in EC2 prior to apply."
+}
+
 variable "officeIPAddr" {
-  description = "Is the IP address of the Current (outbound) Gateway: A.B.C.D/32"
+  description = "The IP address of the Current (outbound) Gateway: individual A.B.C.D/32 or block A.B.C.D/29"
+  type        = "string"
 }
 
 variable "host_cidr" {
@@ -71,8 +77,8 @@ variable "kubeNode_type" {
   type        = "string"
 }
 
-variable "kubeNode_count" {
-  description = "Initial number of master nodes, from ENV; E.G.: export TF_VAR_kubeNode_count=3"
+variable "minDistSize" {
+  description = "ENV Integer; initial count of distributed subnets, workers, etc; E.G.: export TF_VAR_minDistSize=3"
 }
 
 //variable "kubes_log_service" {

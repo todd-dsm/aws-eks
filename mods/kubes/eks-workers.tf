@@ -3,6 +3,30 @@
                                Amazon EKS Workers
   -----------------------------------------------------------------------------
 */
+# Empulate GCP Node Pools: https://goo.gl/rgvKZ6
+# Apps will require nodes of a type (https://goo.gl/59jXy). We will configure
+# an app-specific node, then label it so containers are scheduled properly.
+# This will ensure pod scheduling on nodes with the right resources.
+variable "myApp" {
+  description = "app for nodes"
+  default     = "opcon"
+}
+
+variable "nodeLabel" {
+  description = "nodeLabel determined by app reqs; used for Kubernetes node label."
+  default     = "--node-labels=app=opcon"
+}
+
+variable "kubeNode_max" {
+  description = "autoscaler max node count"
+  default     = "5"
+}
+
+/*
+  -----------------------------------------------------------------------------
+                               Worker IAM Roles
+  -----------------------------------------------------------------------------
+*/
 resource "aws_iam_role" "kubes-worker" {
   name = "kubes-stage-node"
 
@@ -42,6 +66,12 @@ resource "aws_iam_role_policy_attachment" "kubes-node-AmazonEC2ContainerRegistry
   role       = "${aws_iam_role.kubes-worker.name}"
 }
 
+# Access to AutoScaling
+resource "aws_iam_role_policy_attachment" "kubes-node-AutoScalingFullAccess" {
+  policy_arn = "arn:aws:iam::aws:policy/AutoScalingFullAccess"
+  role       = "${aws_iam_role.kubes-worker.name}"
+}
+
 resource "aws_iam_instance_profile" "kubes-node" {
   name = "kubes-stage-node-profile"
   role = "${aws_iam_role.kubes-worker.name}"
@@ -53,16 +83,28 @@ resource "aws_iam_instance_profile" "kubes-node" {
   -----------------------------------------------------------------------------
 */
 resource "aws_autoscaling_group" "kubes" {
-  desired_capacity     = "${var.kubeNode_count}"
-  launch_configuration = "${aws_launch_configuration.kubes.id}"
-  max_size             = 5
-  min_size             = "${var.kubeNode_count}"
-  name                 = "eks-kubes"
+  desired_capacity     = "${var.minDistSize}"
+  min_size             = "${var.minDistSize}"
+  max_size             = "${var.kubeNode_max}"
   vpc_zone_identifier  = ["${aws_subnet.kubes.*.id}"]
+  name                 = "${var.cluster_name}"
+  launch_configuration = "${aws_launch_configuration.kubes.id}"
 
   tag {
     key                 = "Name"
-    value               = "kubes-stage-node"
+    value               = "kubes-node-${var.myApp}"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "env"
+    value               = "${var.envBuild}"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "app"
+    value               = "${var.myApp}"
     propagate_at_launch = true
   }
 
@@ -78,20 +120,25 @@ resource "aws_autoscaling_group" "kubes" {
                          AutoScaling Group Launch Config
   -----------------------------------------------------------------------------
 */
+# see options: https://github.com/awslabs/amazon-eks-ami/blob/master/files/bootstrap.sh
 locals {
   kubes-node-userdata = <<USERDATA
 #!/bin/bash
 set -o xtrace
-/etc/eks/bootstrap.sh --apiserver-endpoint '${aws_eks_cluster.kubes.endpoint}' --b64-cluster-ca '${aws_eks_cluster.kubes.certificate_authority.0.data}' '${var.cluster_name}'
+/etc/eks/bootstrap.sh \
+  --apiserver-endpoint '${aws_eks_cluster.kubes.endpoint}' \
+  --b64-cluster-ca '${aws_eks_cluster.kubes.certificate_authority.0.data}' '${var.cluster_name}' \
+  --kubelet-extra-args '${var.nodeLabel}'
 USERDATA
 }
 
+# aws_launch_configuration cannot be tagged
 resource "aws_launch_configuration" "kubes" {
   associate_public_ip_address = true
   iam_instance_profile        = "${aws_iam_instance_profile.kubes-node.name}"
+  key_name                    = "${var.builder}"
   image_id                    = "${data.aws_ami.eks-worker.id}"
   instance_type               = "${var.kubeNode_type}"
-  key_name                    = "master"
   name_prefix                 = "eks-kubes"
   security_groups             = ["${aws_security_group.kubes-node.id}"]
   user_data_base64            = "${base64encode(local.kubes-node-userdata)}"
@@ -106,7 +153,6 @@ resource "aws_launch_configuration" "kubes" {
                             Join Workers to Cluster
   -----------------------------------------------------------------------------
 */
-
 locals {
   config_map_aws_auth = <<CONFIGMAPAWSAUTH
 apiVersion: v1
@@ -121,11 +167,20 @@ data:
       groups:
         - system:bootstrappers
         - system:nodes
+  mapUsers: |
+    - userarn: arn:aws:iam::648053780176:user/thomast23
+      username: thomast23
+      groups:
+        - system:masters
+    - userarn: arn:aws:iam::648053780176:user/leij
+      username: leij
+      groups:
+        - system:masters
+    - userarn: arn:aws:iam::648053780176:user/vanderhoofm
+      username: vanderhoofm
+      groups:
+        - system:masters
 CONFIGMAPAWSAUTH
-}
-
-output "config_map_aws_auth" {
-  value = "${local.config_map_aws_auth}"
 }
 
 /*
@@ -141,4 +196,17 @@ data "aws_ami" "eks-worker" {
 
   most_recent = true
   owners      = ["602401143452"] # Amazon EKS AMI Account ID
+}
+
+/*
+  -----------------------------------------------------------------------------
+                                    OUTPUTS
+  -----------------------------------------------------------------------------
+*/
+output "config_map_aws_auth" {
+  value = "${local.config_map_aws_auth}"
+}
+
+output "asgMaxNodes" {
+  value = "${aws_autoscaling_group.kubes.max_size}"
 }

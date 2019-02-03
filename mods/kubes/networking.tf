@@ -13,7 +13,9 @@ data "aws_availability_zones" "available" {}
 */
 # THE VPC
 resource "aws_vpc" "kubes" {
-  cidr_block = "${var.host_cidr}"
+  cidr_block           = "${var.host_cidr}"
+  enable_dns_hostnames = true
+  enable_dns_support   = true
 
   tags = "${
     map(
@@ -25,7 +27,7 @@ resource "aws_vpc" "kubes" {
 
 # Create Subnetes within the VPC
 resource "aws_subnet" "kubes" {
-  count = "${length(data.aws_availability_zones.available.names)}"
+  count = "${var.minDistSize}"
 
   availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
   cidr_block        = "10.0.${count.index}.0/24"

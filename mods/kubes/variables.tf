@@ -14,13 +14,17 @@ variable "dns_zone" {
   type        = "string"
 }
 
+variable "builder" {
+  description = "Evaluates to $USER; there must be key-piar (with the same name) in EC2 prior to apply."
+}
+
 variable "envBuild" {
   description = "Build Environment; from ENV; E.G.: envBuild=stage"
   type        = "string"
 }
 
 variable "region" {
-  description = "Deployment Region; from ENV; E.G.: us-west2"
+  description = "Deployment Region; from ENV; E.G.: us-east-1"
   type        = "string"
 }
 
@@ -36,12 +40,8 @@ variable "project" {
 }
 
 variable "cluster_name" {
-  description = "Evaluates to deployment_env_state; I.E.: kubes-stage-or"
+  description = "Evaluates to deployment_env_state; I.E.: kubes-stage-va"
   type        = "string"
-}
-
-variable "officeIPAddr" {
-  description = "The IP address of the Current (outbound) Gateway: A.B.C.D/32"
 }
 
 variable "host_cidr" {
@@ -58,6 +58,20 @@ variable "kubeNode_type" {
   type        = "string"
 }
 
-variable "kubeNode_count" {
-  description = "Initial number of master nodes, from ENV; E.G.: export TF_VAR_kubeNode_count=3"
+variable "minDistSize" {
+  description = "ENV Integer; initial count of distributed subnets, workers, etc; E.G.: export TF_VAR_minDistSize=3"
+}
+
+/*
+  -----------------------------------------------------------------------------
+                                OFFICE GATEWAYS
+    All we know at this point is:
+      3 people asked the same question: curl -s4 icanhazip.com
+      and each got a different response.
+  -----------------------------------------------------------------------------
+*/
+
+variable "officeIPAddr" {
+  description = "The IP address of the Current (outbound) Gateway: individual A.B.C.D/32 or block A.B.C.D/29"
+  type        = "string"
 }

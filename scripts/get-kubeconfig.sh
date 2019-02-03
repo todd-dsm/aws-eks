@@ -22,61 +22,51 @@
 ###----------------------------------------------------------------------------
 ### VARIABLES
 ###----------------------------------------------------------------------------
-#"${1?  Wheres my first agument, bro!}"
-# ENV Stuff
-awsAuthVers='1.11.5'
-awsAuthDate='2018-12-06'
-tmpAuthBin='/tmp/aws-iam-authenticator'
-sysAuthBin='/usr/local/bin/aws-iam-authenticator'
-tmpAuthSHA='/tmp/aws-iam-authenticator.sha256'
-remoteAuthBin="https://amazon-eks.s3-us-west-2.amazonaws.com/${awsAuthVers}/${awsAuthDate}/bin/darwin/amd64/aws-iam-authenticator"
-remoteAuthSHA="https://amazon-eks.s3-us-west-2.amazonaws.com/${awsAuthVers}/${awsAuthDate}/bin/darwin/amd64/aws-iam-authenticator.sha256"
-iamAuthURL='https://docs.aws.amazon.com/eks/latest/userguide/configure-kubectl.html'
-# Data
-
+: "${TF_VAR_cluster_name?  Wheres cluster_name, bro!}"
+: "${TF_VAR_aws_acct_no?   Missing the account number!}"
+eksCluster="arn:aws:eks:us-east-1:648053780176:cluster/${TF_VAR_cluster_name}"
+targetClusterName="$(grep "name: $TF_VAR_cluster_name" ~/.kube/config)"
 
 ###----------------------------------------------------------------------------
 ### FUNCTIONS
 ###----------------------------------------------------------------------------
+# print a 1-liner
 function pMsg() {
     theMessage="$1"
-    printf '%s\n' "$theMessage"
+    printf '\n%s\n\n' "$theMessage"
 }
+
+# grab someones attention
+function pHeadline() {
+    theMessage="$1"
+    printf '%s\n' """
+                    $theMessage
+    """
+}
+
+# rename cloud-defaults, they're obnoxious
+function renameCreds() {
+    pMsg "Changing that obnoxious name..."
+    kubectl config rename-context \
+        "arn:aws:eks:${TF_VAR_region}:648053780176:cluster/${TF_VAR_cluster_name}" \
+        "$TF_VAR_cluster_name"
+}
+
+# no creds locally, get them
+function pullNewCreds() {
+    pHeadline "No config found; pulling new..."
+    aws eks update-kubeconfig \
+        --name "$TF_VAR_cluster_name" \
+        --region="$TF_VAR_region"
+    renameCreds
+}
+
 
 ###----------------------------------------------------------------------------
 ### MAIN PROGRAM
 ###----------------------------------------------------------------------------
-### Check basic requirements
+### Pre-check: verify caller
 ###---
-if ! type -P "${sysAuthBin##*/}"; then
-    pMsg "The AWS Authenticator is not installed; pulling it..."
-    pMsg "Instructions: $iamAuthURL"
-    curl -so "$tmpAuthBin" "$remoteAuthBin"
-    pMsg "Validating the bin with the SHA-256 sum..."
-    curl -so "$tmpAuthSHA" "$remoteAuthSHA"
-    shaTarget="$(cut -d' ' -f1 "$tmpAuthSHA")"
-    shaActual="$(openssl sha -sha256 "$tmpAuthBin")"
-    if [[ "${shaActual##*\ }" != "$shaTarget" ]]; then
-        pMsg "The download flaked; check the instructions above; I'm out."
-        exit 1
-    else
-        pMsg "The download was good, moving it home..."
-        mv "$tmpAuthBin" "$sysAuthBin"
-        chmod u+x "$sysAuthBin"
-    fi
-else
-    pMsg "There is an authenticator; moving on."
-fi
-
-
-###---
-### Display the actual credentials
-###---
-#pMsg """
-#
-#    We'll attempt to get the EKS config with these credentials:
-#
-#    """
 #aws sts get-caller-identity
 
 
@@ -84,84 +74,41 @@ fi
 ### Update the local KUBECONFIG with the new, remote cluster details
 ### REF: https://docs.aws.amazon.com/eks/latest/userguide/create-kubeconfig.html
 ###---
+#targetClusterName="$eksCluster"
+#targetClusterName="foo"
+targetClusterName=""
 
-targetClusterName="$(grep "name: $TF_VAR_cluster_name" ~/.kube/config)"
-
-if [[ "${targetClusterName##* }" != "$TF_VAR_cluster_name" ]]; then
-    pMsg """
-
-        Updating local KUBECONFIG...
-
-        """
-    aws eks update-kubeconfig --name "$TF_VAR_cluster_name"
-else
-    pMsg """
-
-        It looks like $TF_VAR_cluster_name is configured; I'm out.
-
-        """
-        exit 0
-fi
-
-###---
-### Change the Cluster Name locally
-###---
-pMsg """
-
-    Changing that obnoxious name...
-
-    """
-kubectl config rename-context \
-	"arn:aws:eks:${TF_VAR_region}:405322537961:cluster/${TF_VAR_cluster_name}" \
-	"$TF_VAR_cluster_name"
+case "${targetClusterName##* }" in
+    "")
+        pullNewCreds
+        ;;
+    "$TF_VAR_cluster_name")
+        echo "REQ further checks"
+        ;;
+    "$eksCluster")
+        renameCreds
+        ;;
+    *)  # Default case: If no more options then break out of the loop.
+        pHeadline "Slack the DevOps team for help with this exception."
+        #printf '\n%s\n\n' "  Slack the DevOps team for help with this exception."
+        ;;
+esac
 
 
 ###---
-### REQ
+### Disaply all contexts, switch to this cluster
 ###---
-pMsg """
+pHeadline "The new contexts:"
 
-    The new contexts:
-
-    """
 kubectl config get-contexts
 kubectl config use-context  "$TF_VAR_cluster_name"
 
 
 ###---
-### REQ
+### Disaply current cluster info
 ###---
-pMsg """
-
-    The new EKS Cluster:
-
-    """
+pHeadline "The new EKS Cluster:"
 kubectl cluster-info
-
-
-###---
-### REQ
-###---
-
-
-###---
-### REQ
-###---
-
-
-###---
-### REQ
-###---
-
-
-###---
-### REQ
-###---
-
-
-###---
-### REQ
-###---
 
 
 ###---
