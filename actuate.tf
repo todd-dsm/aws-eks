@@ -18,6 +18,7 @@ module "kubernetes" {
   host_cidr     = "${var.host_cidr}"
   officeIPAddr  = "${var.officeIPAddr}"
   builder       = "${var.builder}"
+  aws_acct_no   = "${var.aws_acct_no}"
 }
 
 # ephemeral encryption keys
@@ -33,6 +34,7 @@ module "kubernetes" {
 //  public_key_extension  = ".pub"
 //  chmod_command         = "chmod 400 %v"
 //}
+
 
 # ephemeral state backend
 //module "terraform_state_backend" {

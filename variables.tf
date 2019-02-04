@@ -9,6 +9,11 @@ variable "myCo" {
   type        = "string"
 }
 
+variable "aws_acct_no" {
+  description = "Expands to AWS Account Number; E.G.: 0101-0101-0101"
+  type        = "string"
+}
+
 variable "dns_zone" {
   description = "Root DNS Zone for myCo; I.E.: example.tld"
   type        = "string"

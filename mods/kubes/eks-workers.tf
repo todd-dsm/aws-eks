@@ -66,12 +66,21 @@ resource "aws_iam_role_policy_attachment" "kubes-node-AmazonEC2ContainerRegistry
   role       = "${aws_iam_role.kubes-worker.name}"
 }
 
+# ------------------------------ auto-scaling ---------------------------------
 # Access to AutoScaling
 resource "aws_iam_role_policy_attachment" "kubes-node-AutoScalingFullAccess" {
   policy_arn = "arn:aws:iam::aws:policy/AutoScalingFullAccess"
   role       = "${aws_iam_role.kubes-worker.name}"
 }
 
+# ------------------------------ external-dns ---------------------------------
+# Access to Route53
+resource "aws_iam_role_policy_attachment" "kubes-node-AmazonRoute53AutoNamingFullAccess" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonRoute53AutoNamingFullAccess"
+  role       = "${aws_iam_role.kubes-worker.name}"
+}
+
+# ------------------------------ node-profile ---------------------------------
 resource "aws_iam_instance_profile" "kubes-node" {
   name = "kubes-stage-node-profile"
   role = "${aws_iam_role.kubes-worker.name}"
@@ -168,15 +177,15 @@ data:
         - system:bootstrappers
         - system:nodes
   mapUsers: |
-    - userarn: arn:aws:iam::648053780176:user/thomast23
+    - userarn: arn:aws:iam::${var.aws_acct_no}:user/thomast23
       username: thomast23
       groups:
         - system:masters
-    - userarn: arn:aws:iam::648053780176:user/leij
+    - userarn: arn:aws:iam::${var.aws_acct_no}:user/leij
       username: leij
       groups:
         - system:masters
-    - userarn: arn:aws:iam::648053780176:user/vanderhoofm
+    - userarn: arn:aws:iam::${var.aws_acct_no}:user/vanderhoofm
       username: vanderhoofm
       groups:
         - system:masters
