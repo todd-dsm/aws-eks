@@ -28,14 +28,14 @@ Also: install the [aws-iam-authenticator] for Amazon EKS; just download it from 
 
 ## Do the Work
 
-_**NOTES:**_ 
+_**NOTES:**_
 * this should be done in 1 shell - until we need a second one.
 * if you see anything weird, check the issues in this repo, even the closed ones.
- 
+
 `git clone git@github.com:todd-dsm/aws-eks.git && cd aws-eks`
 
 **Project Details**
- 
+
 Configure the project details in `build.env` then source them into your environment by passing an argument to the script. The argument is your deployment environment; E.G.: stage, prod.
 
 ```
@@ -50,13 +50,23 @@ For reasons you'll come to find on your own, the Terraform bits have been abstra
 
 ```
 $ make
+all              All-in-one
 tf-init          Initialze the build
 plan             Initialze and Plan the build with output log
-graph            Create a visual graph pre-build 
 apply            Build Terraform project with output log
 creds            Update the local KUBECONFIG with the new cluster details
-remote           Switch to remote state storage
+xdns             installs metrics server
+scale            installs metrics server
+observe          Deploy Datadog
+graph            Create a visual graph pre-build
+opcon            install opcon helm chart
+ingress          install ingress
+scaletest        Tests HPA scaling
+scaleresults     Prints the scale results
+scaleclean       Cleans up the junk created from the scale test
+apm              Deploys todo demo app with Datadog APM integration
 clean            Destroy Terraformed resources and all generated files with output log
+reset            clear-off kubeconfig cruft
 ```
 
 ## Terraform
@@ -65,7 +75,7 @@ clean            Destroy Terraformed resources and all generated files with outp
 **Initialize**
 
 ```
-$ make tf-init 
+$ make tf-init
 terraform init -get=true -backend=true \
 	-backend-config="backend.hcl"
 
@@ -109,7 +119,7 @@ Assuming all went well - build it.
 ```
 $ make apply
 ...
-terraform apply --auto-approve -no-color \                                 
+terraform apply --auto-approve -no-color \
     -input=false /tmp/kubes-stage-la.plan 2>&1 | tee /tmp/tf-stage-la-plan.out
 ```
 
@@ -135,7 +145,7 @@ TERM1:
 `kubectl create -f zapp/ && watch kubectl get pods`
 
 
-TERM2: 
+TERM2:
 
 Get the objects for `service` and `hpa`:
 
@@ -176,7 +186,7 @@ Delete a `pod` and `node` while watching in TERM1.
 
 This will destroy all resources in the active state file, sync the state again and remove local stuff; it takes about 7 minutes.
 
-``` 
+```
 $ make clean
 
 terraform destroy --force -auto-approve 2>&1 | \
