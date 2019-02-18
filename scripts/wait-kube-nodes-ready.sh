@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-
-set -x
+#set -x
 
 JSONPATH='{range .items[*]}{@.metadata.name}:{range @.status.conditions[*]}{@.type}={@.status};{end}{end}'
 

@@ -32,10 +32,10 @@ spec:
             - --stderrthreshold=info
             - --cloud-provider=aws
             - --skip-nodes-with-local-storage=false
-            - --nodes=3:5:kubes-stage-or
+            - --nodes=3:5:kubes-stage-va
           env:
             - name: AWS_REGION
-              value: us-west-2
+              value: us-east-1
           volumeMounts:
             - name: ssl-certs
               mountPath: /etc/ssl/certs/ca-certificates.crt

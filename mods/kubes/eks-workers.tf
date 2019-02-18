@@ -24,70 +24,6 @@ variable "kubeNode_max" {
 
 /*
   -----------------------------------------------------------------------------
-                               Worker IAM Roles
-  -----------------------------------------------------------------------------
-*/
-resource "aws_iam_role" "kubes-worker" {
-  name = "kubes-stage-node"
-
-  assume_role_policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "ec2.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-POLICY
-}
-
-# Allows: Describe: Instances, RouteTables, SecurityGroups, Subnets, Volumes,
-# VolumesModifications, VPCs and Clusters
-resource "aws_iam_role_policy_attachment" "kubes-node-AmazonEKSWorkerNodePolicy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-  role       = "${aws_iam_role.kubes-worker.name}"
-}
-
-# This policy provides the Amazon VPC CNI Plugin (amazon-vpc-cni-k8s) the permissions it requires to modify the
-# IP address configuration on your EKS worker nodes
-resource "aws_iam_role_policy_attachment" "kubes-node-AmazonEKS_CNI_Policy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-  role       = "${aws_iam_role.kubes-worker.name}"
-}
-
-# Allows Workers to pull images from the Elastic Container Registry
-resource "aws_iam_role_policy_attachment" "kubes-node-AmazonEC2ContainerRegistryReadOnly" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-  role       = "${aws_iam_role.kubes-worker.name}"
-}
-
-# ------------------------------ auto-scaling ---------------------------------
-# Access to AutoScaling
-resource "aws_iam_role_policy_attachment" "kubes-node-AutoScalingFullAccess" {
-  policy_arn = "arn:aws:iam::aws:policy/AutoScalingFullAccess"
-  role       = "${aws_iam_role.kubes-worker.name}"
-}
-
-# ------------------------------ external-dns ---------------------------------
-# Access to Route53
-resource "aws_iam_role_policy_attachment" "kubes-node-AmazonRoute53AutoNamingFullAccess" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonRoute53AutoNamingFullAccess"
-  role       = "${aws_iam_role.kubes-worker.name}"
-}
-
-# ------------------------------ node-profile ---------------------------------
-resource "aws_iam_instance_profile" "kubes-node" {
-  name = "kubes-stage-node-profile"
-  role = "${aws_iam_role.kubes-worker.name}"
-}
-
-/*
-  -----------------------------------------------------------------------------
                           Worker Node AutoScaling Group
   -----------------------------------------------------------------------------
 */
@@ -218,4 +154,120 @@ output "config_map_aws_auth" {
 
 output "asgMaxNodes" {
   value = "${aws_autoscaling_group.kubes.max_size}"
+}
+
+/*
+  -----------------------------------------------------------------------------
+                        Worker IAM Policies ExternalDNS
+  -----------------------------------------------------------------------------
+*/
+data "aws_route53_zone" "gnoe_zone" {
+  name         = "${var.dns_zone}."
+  private_zone = false
+}
+
+
+/*
+  -----------------------------------------------------------------------------
+                               Worker IAM Roles
+  -----------------------------------------------------------------------------
+*/
+resource "aws_iam_role" "kubes-worker" {
+  name = "kubes-stage-node"
+
+  assume_role_policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+POLICY
+}
+
+# Allows: Describe: Instances, RouteTables, SecurityGroups, Subnets, Volumes,
+# VolumesModifications, VPCs and Clusters
+resource "aws_iam_role_policy_attachment" "kubes-node-AmazonEKSWorkerNodePolicy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+  role       = "${aws_iam_role.kubes-worker.name}"
+}
+
+# This policy provides the Amazon VPC CNI Plugin (amazon-vpc-cni-k8s) the permissions it requires to modify the
+# IP address configuration on your EKS worker nodes
+resource "aws_iam_role_policy_attachment" "kubes-node-AmazonEKS_CNI_Policy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+  role       = "${aws_iam_role.kubes-worker.name}"
+}
+
+# ------------------------------ auto-scaling ---------------------------------
+# Access to AutoScaling
+resource "aws_iam_role_policy_attachment" "kubes-node-AutoScalingFullAccess" {
+  policy_arn = "arn:aws:iam::aws:policy/AutoScalingFullAccess"
+  role       = "${aws_iam_role.kubes-worker.name}"
+}
+
+# ------------------------------ node-profile ---------------------------------
+resource "aws_iam_instance_profile" "kubes-node" {
+  name = "kubes-stage-node-profile"
+  role = "${aws_iam_role.kubes-worker.name}"
+}
+
+/*
+  -----------------------------------------------------------------------------
+                              Custom Policies
+  -----------------------------------------------------------------------------
+*/
+
+# ------------------------------- ECR Access  ---------------------------------
+# Allows Workers to pull images from the Elastic Container Registry
+resource "aws_iam_role_policy_attachment" "kubes-node-AmazonEC2ContainerRegistryReadOnly" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  role       = "${aws_iam_role.kubes-worker.name}"
+}
+
+
+# ------------------------------ external-dns ---------------------------------
+resource "aws_iam_role_policy_attachment" "kubes-node-xdns-policy" {
+  policy_arn = "${aws_iam_policy.external-dns-policy.arn}"
+  role       = "${aws_iam_role.kubes-worker.name}"
+}
+
+resource "aws_iam_policy" "external-dns-policy" {
+  name = "kubes-external-dns-policy"
+  path = "/"
+  description = "Allows EKS nodes to modify Route53 to support ExternalDNS."
+
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "route53:ListHostedZones",
+                "route53:ListResourceRecordSets"
+            ],
+            "Resource": ["*"]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "route53:ChangeResourceRecordSets"
+            ],
+            "Resource": ["*"]
+        }
+    ]
+}
+EOF
+}
+
+# Which zone did we find
+output "hosted_zone" {
+  value = "${data.aws_route53_zone.gnoe_zone.id}"
 }
